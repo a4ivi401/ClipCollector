@@ -1,6 +1,7 @@
 import uuid
+import secrets
 
 def generate_random_file_name():
-    return f"{uuid.uuid4}"
+    return secrets.token_hex(16)
 
 uuid_filename = generate_random_file_name()
