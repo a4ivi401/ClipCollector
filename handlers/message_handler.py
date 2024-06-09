@@ -5,7 +5,6 @@ import os
 from utils.random_filename import uuid_filename
 import requests
 from bs4 import BeautifulSoup
-from tqdm import tqdm
 from utils.pinterest import download_pin
 import re
 
@@ -73,7 +72,7 @@ def register_handlers(bot):
                     if("https://pin.it/" in url): 
                         t_body = requests.get(url)
                         if(t_body.status_code!= 200):
-                            bot.reply_to(message, "Entered URL is invalid or not working.")
+                            bot.reply_to(message, "Введенный URL недействителен или не работает")
                             return
                         soup = BeautifulSoup(t_body.content,"html.parser")
                         href_link = (soup.find("link",rel="alternate"))['href']
@@ -81,7 +80,7 @@ def register_handlers(bot):
                         url = match.group(1) 
                     body = requests.get(url) 
                     if(body.status_code!= 200): 
-                        bot.reply_to(message, "Entered URL is invalid or not working.")
+                        bot.reply_to(message, "Введенный URL недействителен или не работает")
                         return
                     soup = BeautifulSoup(body.content, "html.parser") 
                     extract_url = (soup.find("video",class_="hwa kVc MIw L4E"))['src'] 
