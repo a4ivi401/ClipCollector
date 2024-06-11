@@ -18,6 +18,9 @@ def register_handlers(bot):
                 bot.send_message(message.chat.id, "Отправь мне ссылку на клип TikTok")
             elif message.text == '📺Pinterest' or message.text == 'Pinterest':
                 bot.send_message(message.chat.id, "Отправь мне ссылку на видео Pinterest")
+            elif message.text == '📺Pinterest GIF' or message.text == 'Pinterest GIF':
+                gif = bot.send_message(message.chat.id, "Отправь мне ссылку на GIF Pinterest")
+                bot.register_next_step_handler(gif, download_pinterest_gif)
             elif message.text == '❓FAQ' or message.text == 'FAQ':
                 with open('faq.txt', 'r') as file:
                     text = file.read()
@@ -39,7 +42,7 @@ def register_handlers(bot):
                         info = ydl.extract_info(url_allow, download=True)
                         with open(ytfilename, "rb") as file:
                             bot.send_video(message.chat.id, file, timeout=240)
-                        bot.reply_to(message, 'Видео успешно скачано')
+                        bot.reply_to(message, 'Видео из YouTube успешно скачано')
                         os.remove(ytfilename)
 
                     except Exception as e:
@@ -97,3 +100,26 @@ def register_handlers(bot):
         except Exception as e:
             log_error(e)
             bot.reply_to(message, f'Произошла ошибка при скачивании видео')
+    
+    def download_pinterest_gif(message):
+        pinterest_url = message.text
+        response = requests.get(pinterest_url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        images = soup.find_all('img')
+        gifs = soup.find_all('video')
+        media_files = []
+        for img in images:
+            img_url = img.get('src')
+            if img_url:
+                media_files.append(img_url)
+        for gif in gifs:
+            gif_url = gif.get('src')
+            if gif_url:
+                media_files.append(gif_url)
+        for file in media_files:
+            response = requests.get(file, stream=True)
+            file_name = os.path.basename(file)
+            with open(file_name, 'wb') as f:
+                for chunk in response.iter_content(1024):
+                    f.write(chunk)
+            bot.send_document(message.chat.id, open(file_name, 'rb'))
