@@ -6,7 +6,7 @@
 1. Для корректной работы бота рекомендую использовать Python 3.11.5
 2. Клонируйте репозиторий в выбранный вами каталог при помощи команды `git clone https://github.com/a4ivi401/ClipCollector`
 3. Перейдите в созданый каталог ClipCollector
-4. Примените виртуальную среду идущую в комплекте с ботом при помощи команды `source clp_env/bin/activate`если у вас macos/linux или `clp_env/bin/activate` если у вас windows
+4. Введите `pip install telebot`
 5. Измените параметры в файле `config.py` на ваши
 6. Запустите бота командой `python main.py`
 
